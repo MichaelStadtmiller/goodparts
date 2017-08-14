@@ -9,4 +9,4 @@ class Movie(models.Model):
     poster = models.CharField(max_length=500, null=True)
     studio = models.CharField(max_length=100, null=True)
     genres = models.TextField(null=True)
-    year_released = models.integer(null=True)
+    year_released = models.IntegerField(null=True)
