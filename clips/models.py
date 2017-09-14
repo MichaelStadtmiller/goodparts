@@ -33,6 +33,7 @@ class Scene(models.Model):
     description = models.CharField(max_length=500, null=True)
     video_path = models.CharField(max_length=500)
 
+
 decades = [
     '2016',
     '2015',
@@ -49,4 +50,34 @@ decades = [
     '1950s',
     '1940s',
     '1930s'
+]
+
+alphabet = [
+    '0',
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z'
 ]
