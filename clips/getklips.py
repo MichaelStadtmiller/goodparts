@@ -1,13 +1,15 @@
 from bs4 import BeautifulSoup
 import requests
 from .models import decades, alphabet
-
+import os.path
 
 def getURLS():
+    posters = []
     for d in decades:
         for a in alphabet:
-            myhtml = gethtml(d, a)
-    return (myhtml)
+            # get posters for url
+            posters.append(gethtml(d, a))
+    return (posters)
 
 
 def gethtml(d, a):
@@ -21,11 +23,14 @@ def gethtml(d, a):
     html = requests.get(url, headers=headers)
     soup = BeautifulSoup(html.text, "html.parser")
 
-    # get the total movies for the decade
+    # get the total movies per decade per starting letter
     try:
         total_movies_count = soup.find('h1', attrs={'class': 'entry-title'}).string.split(' ', 1)[0]
     except:
+        # debug if can't split
         print("nope")
+
+    # if no movies, the first word is "Movies" not a number.
     if total_movies_count == "Movies":
         total_movies_count = 0
     else:
@@ -34,14 +39,24 @@ def gethtml(d, a):
     # count all movies on the page
     current_movie_count = len(soup.find_all('div', attrs={'class': 'poster'}))
 
-    if current_movie_count < total_movies_count:
-        print(url)
-        print("total: %s current: %s", str(total_movies_count), str(current_movie_count))
-    #while current_movie_count < total_movies_count:
-        # click the link
+    # NEED TO GET ALL MOVIES
+    # print if more movies behind a javascript button
+    #if current_movie_count < total_movies_count:
+    #    print(url)
+    #    print("total: %s current: %s", str(total_movies_count), str(current_movie_count))
+        # need to click javascript button to get more movies before continuing
 
-    #    current_movie_count = len(soup.find_all('div', attrs={'class': 'poster'}))
+    # get movie tags
+    print(url)
+    posters = soup.find_all('div', attrs={'class': 'poster'})
+    movies = []
+    for p in posters:
+        # get initial movie data
+        movie_name_path = p.find('a').get('href').rsplit('/', 1)[0]
+        print(movie_name_path)
+        movies.append(movie_name_path)
 
-    #posters = soup.find_all('div', attrs={'class': 'poster'})
+    # loop through posters
+    #   Get poster data: poster img, title, release date
 
     return soup

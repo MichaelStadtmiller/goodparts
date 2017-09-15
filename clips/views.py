@@ -4,6 +4,11 @@ from .getklips import *
 
 
 # Create your views here.
+# def index(request):
+#     html = getURLS()
+#     return HttpResponse(html)
+
 def index(request):
     html = getURLS()
-    return HttpResponse(html)
+#    template_name = 'clips/index.html'
+    return render(request, 'clips/index.html')
