@@ -36,10 +36,9 @@ def gethtml(d, a):
     else:
         total_movies_count = int(total_movies_count)
 
+    ## MLS: NEED TO GET ALL MOVIES ##
     # count all movies on the page
-    current_movie_count = len(soup.find_all('div', attrs={'class': 'poster'}))
-
-    # NEED TO GET ALL MOVIES
+    # current_movie_count = len(soup.find_all('div', attrs={'class': 'poster'}))
     # print if more movies behind a javascript button
     #if current_movie_count < total_movies_count:
     #    print(url)
@@ -52,10 +51,10 @@ def gethtml(d, a):
     movies = []
     for p in posters:
         # get initial movie data
-        movie_name_path = p.find('a').get('href').rsplit('/', 1)[0]
+        movie_name_path = p.find('a').get('href').rsplit('/')
         print(movie_name_path)
-        movies.append(movie_name_path)
-
+        movies.append(movie_name_path[len(movie_name_path)-2])
+    print(movies)
     # loop through posters
     #   Get poster data: poster img, title, release date
 
