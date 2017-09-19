@@ -3,6 +3,7 @@ import requests
 from .models import decades, alphabet
 import os.path
 
+
 def getURLS():
     posters = []
     for d in decades:
@@ -10,6 +11,27 @@ def getURLS():
             # get posters for url
             posters.append(gethtml(d, a))
     return (posters)
+
+
+def randomhtml():
+    base_url = "http://klipd.com/random/"
+    headers = {'Accept': 'text/css,*/*;q=0.1',
+               'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+               'Accept-Encoding': 'gzip,deflate,sdch',
+               'Accept-Language': 'en-US,en;q=0.8',
+               'User-Agent': 'Mozilla/5 (Solaris 10) Gecko'}
+    all_data = []
+    for x in range(1):
+        # get random url
+        url = base_url + str(x)
+        html = requests.get(url, headers=headers)
+        soup = BeautifulSoup(html.text, "html.parser")
+        data = soup.find_all('div', attrs={'class': 'col-sm-4'})
+        for d in data:
+            a = d.find('div', attrs={'class': 'movieInfo'})
+            print(a)
+        all_data.append(data)
+    return all_data
 
 
 def gethtml(d, a):

@@ -9,6 +9,7 @@ from .getklips import *
 #     return HttpResponse(html)
 
 def index(request):
-    html = getURLS()
+    # html = getURLS()
+    html = randomhtml()
 #    template_name = 'clips/index.html'
     return render(request, 'clips/index.html')
