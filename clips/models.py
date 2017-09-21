@@ -6,10 +6,17 @@ class Movie(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
     name_path = models.CharField(max_length=500)
+    description = models.CharField(max_length=500, null=True)
     poster = models.CharField(max_length=500, null=True)
     studio = models.CharField(max_length=100, null=True)
     genres = models.TextField(null=True)
-    year_released = models.IntegerField(null=True)
+    date_released = models.DateField(null=True)
+
+    def __str__(self):
+        return self.name_path
+
+    def year_released(self):
+        return self.date_released[:4]
 
 
 class Actor(models.Model):

@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+from titlecase import titlecase
 from .models import decades, alphabet
 import os.path
 
@@ -14,24 +15,47 @@ def getURLS():
 
 
 def randomhtml():
-    base_url = "http://klipd.com/random/"
+    # get all urls from http://klipd.com/sitemap.php
+    url = "http://klipd.com/random/"
     headers = {'Accept': 'text/css,*/*;q=0.1',
                'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
                'Accept-Encoding': 'gzip,deflate,sdch',
                'Accept-Language': 'en-US,en;q=0.8',
                'User-Agent': 'Mozilla/5 (Solaris 10) Gecko'}
-    all_data = []
-    for x in range(1):
-        # get random url
-        url = base_url + str(x)
-        html = requests.get(url, headers=headers)
-        soup = BeautifulSoup(html.text, "html.parser")
-        data = soup.find_all('div', attrs={'class': 'col-sm-4'})
-        for d in data:
-            a = d.find('div', attrs={'class': 'movieInfo'})
-            print(a)
-        all_data.append(data)
-    return all_data
+    html = requests.get(url, headers=headers)
+    soup = BeautifulSoup(html.text, "html.parser")
+    # header
+    head = soup.find('head')
+    this_url = head.find('meta', attrs={'property': 'og:url'}).get('content').rsplit('/')
+
+    m_name_path = this_url[len(this_url)-2].strip()
+    s_name_path = this_url[len(this_url)-1].strip()
+    m_name = titlecase(m_name_path.replace('-', ' ')).strip()
+    s_name = titlecase(s_name_path.replace('-', ' ')).strip()
+
+    # sidebar
+    data = soup.find('div', attrs={'class': 'col-sm-4'})
+    #a = data.find('div', attrs={'id': 'poster'})
+    m_poster = data.find('img').get('src').strip()
+    m_date_released = data.find('div', attrs={'class': 'movieReleaseTag'}).string[-10:].strip()
+    descriptions = data.find('div', attrs={'id': 'clip-description'})
+    dls = descriptions.find_all('dl')
+    for dl in dls:
+        if dl.find('dt').string == "Movie Description":
+            m_description = dl.find('dd').string.strip()
+            print('Movie - Description')
+            print(m_description)
+        elif dl.find('dt').string == "Clip Description":
+            s_description = dl.find('dd').string.strip()
+            print('Scene - description')
+            print(s_description)
+        elif dl.find('dt').string == "Director":
+            m_director = dl.find('dd').string.strip()
+        elif dl.find('dt').string == "Studios":
+            m_studio = dl.find('dd').string.strip()
+
+    
+    return 200
 
 
 def gethtml(d, a):
@@ -63,11 +87,10 @@ def gethtml(d, a):
     # current_movie_count = len(soup.find_all('div', attrs={'class': 'poster'}))
     # print if more movies behind a javascript button
     #if current_movie_count < total_movies_count:
-    #    print(url)
-    #    print("total: %s current: %s", str(total_movies_count), str(current_movie_count))
-        # need to click javascript button to get more movies before continuing
-
-    # get movie tags
+    #   print(url)
+    #   print("total: %s current: %s", str(total_movies_count), str(current_movie_count))
+    #   need to click javascript button to get more movies before continuing
+    #   get movie tags
     print(url)
     posters = soup.find_all('div', attrs={'class': 'poster'})
     movies = []
