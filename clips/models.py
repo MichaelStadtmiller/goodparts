@@ -11,6 +11,7 @@ class Movie(models.Model):
     studio = models.CharField(max_length=100, null=True)
     genres = models.TextField(null=True)
     date_released = models.DateField(null=True)
+    director = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return self.name_path
