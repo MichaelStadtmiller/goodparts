@@ -25,6 +25,9 @@ class Actor(models.Model):
     name = models.CharField(max_length=200)
     headshot = models.CharField(max_length=500, null=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Role(models.Model):
     id = models.AutoField(primary_key=True)
@@ -41,24 +44,28 @@ class Scene(models.Model):
     description = models.CharField(max_length=500, null=True)
     video_path = models.CharField(max_length=500)
 
+    def __str__(self):
+        return self.name_path
+
 
 decades = [
     '2016',
-    # '2015',
-    # '2014',
-    # '2013',
-    # '2012',
-    # '2011',
-    # '2010',
-    # '2000s',
-    # '1990s',
-    # '1980s',
-    # '1970s',
-    # '1960s',
-    # '1950s',
-    # '1940s',
-    # '1930s'
+    '2015',
+    '2014',
+    '2013',
+    '2012',
+    '2011',
+    '2010',
+    '2000s',
+    '1990s',
+    '1980s',
+    '1970s',
+    '1960s',
+    '1950s',
+    '1940s',
+    '1930s'
 ]
+
 
 alphabet = [
     '0',
