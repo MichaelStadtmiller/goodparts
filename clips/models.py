@@ -23,6 +23,7 @@ class Movie(models.Model):
 class Actor(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
+    headshot = models.CharField(max_length=500, null=True)
 
 
 class Role(models.Model):
