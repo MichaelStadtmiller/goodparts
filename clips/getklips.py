@@ -9,8 +9,9 @@ def getURLS():
     # next steps:
     # get all urls from http://klipd.com/sitemap.php
     # get actor profile, get all movies
-    url = "http://klipd.com/random/"
-    url = 'http://klipd.com/watch/good-morning-vietnam/i-wont-forget-you-scene'
+    #url = "http://klipd.com/random/"
+    #url = 'http://klipd.com/watch/good-morning-vietnam/i-wont-forget-you-scene'
+    url = 'http://klipd.com/watch/the-crying-game/jealous-scene'
     scrapeData(url)
 
 
@@ -63,9 +64,8 @@ def scrapeData(url):
 
     # MOVIE TO DATABASE
     ## Check if exists
-    m = Movie.objects.filter(name_path=m_name_path)
-    if m:
-        print('move ' + m_name + ' already exists in the database.')
+    if Movie.objects.filter(name_path=m_name_path):
+        print('movie ' + m_name + ' already exists in the database.')
     else:
         # Insert if DNE
         new_movie = Movie(name=m_name,
@@ -77,37 +77,51 @@ def scrapeData(url):
                           date_released=m_date_released,
                           director=m_director)
         new_movie.save()
-        m = new_movie
+
+    if Scene.objects.filter(name_path=s_name_path):
+        print('scene ' + s_name + ' already exists in the database.')
+    else:
+        # Insert if DNE
+        new_scene = Scene(movie=Movie.objects.get(name=m_name),
+                          name=s_name,
+                          name_path=s_name_path,
+                          description=s_description,
+                          video_path=s_video_path)
+        new_scene.save()
 
     # get actors
     actor_list = data.find('div', attrs={'class': 'rowMM'})
     actors = actor_list.find_all('a')
     for a in actors:
         # actor names
-        title_role = a.find('div', attrs={'class': 'castBlock'}).get('alt').split(' - ')
+        actor_data = a.find('div', attrs={'class': 'castBlock'})
+        title_role = actor_data.get('alt').split(' - ')
         a_name = title_role[0]
         r_role = title_role[1]
-        a_headshot = a.get('href')
+        a_headshot = actor_data.get('style').split('(''')[1][:-3][1:]
+        a_name_path = a.get('href')
+
 
         # ACTORS TO DATABASE
         ## Check if exists
-        a = Actor.objects.filter(name=a_name)
-        if a:
+        if Actor.objects.filter(name=a_name):
             print('actor ' + a_name + ' already exists in the database.')
         else:
             # Insert actor if DNE
             new_actor = Actor(name=a_name,
+                              name_path=a_name_path,
                               headshot=a_headshot)
             new_actor.save()
-            a = new_actor
 
-        r = Role.objects.filter(actor=a.objects, movie=m)
-        if r:
+        if Role.objects.filter(actor__name=a_name).filter(movie__name=m_name):
             print('role ' + a_name + ' in ' + m_name + ' already exists in the database.')
         else:
             # Insert if DNE
-            new_role = Role(movie=m,
-                            actor=a,
+            # error catch in case movie or actor is not added
+            thismovie = Movie.objects.get(name=m_name)
+            thisactor = Actor.objects.get(name=a_name)
+            new_role = Role(movie=thismovie,
+                            actor=thisactor,
                             role=r_role)
             new_role.save()
 

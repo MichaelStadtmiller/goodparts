@@ -4,8 +4,8 @@ from django.db import models
 # Create your models here.
 class Movie(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200)
-    name_path = models.CharField(max_length=500)
+    name = models.CharField(max_length=200, unique=True)
+    name_path = models.CharField(max_length=500, unique=True)
     description = models.CharField(max_length=500, null=True)
     poster = models.CharField(max_length=500, null=True)
     studio = models.CharField(max_length=100, null=True)
@@ -22,7 +22,8 @@ class Movie(models.Model):
 
 class Actor(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
+    name_path = models.CharField(max_length=500, null=True)
     headshot = models.CharField(max_length=500, null=True)
 
     def __str__(self):
