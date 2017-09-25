@@ -3,11 +3,7 @@ from django.http import HttpResponse
 from .getklips import *
 
 
-# Create your views here.
-# def index(request):
-#     html = getURLS()
-#     return HttpResponse(html)
-
 def index(request):
-    getURLS()
+    for a in range(200):
+        getURLS()
     return render(request, 'clips/index.html')

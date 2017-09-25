@@ -6,12 +6,12 @@ class Movie(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, unique=True)
     name_path = models.CharField(max_length=500, unique=True)
-    description = models.CharField(max_length=500, null=True)
+    description = models.CharField(max_length=2000, null=True)
     poster = models.CharField(max_length=500, null=True)
-    studio = models.CharField(max_length=100, null=True)
+    studio = models.CharField(max_length=500, null=True)
     genres = models.TextField(null=True)
     date_released = models.DateField(null=True)
-    director = models.CharField(max_length=100, null=True)
+    director = models.CharField(max_length=500, null=True)
 
     def __str__(self):
         return self.name_path
@@ -34,7 +34,7 @@ class Role(models.Model):
     id = models.AutoField(primary_key=True)
     movie = models.ForeignKey(Movie)
     actor = models.ForeignKey(Actor)
-    role = models.CharField(max_length=100, null=True)
+    role = models.CharField(max_length=500, null=True)
 
 
 class Scene(models.Model):
@@ -42,7 +42,7 @@ class Scene(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     name_path = models.CharField(max_length=500)
-    description = models.CharField(max_length=500, null=True)
+    description = models.CharField(max_length=2000, null=True)
     video_path = models.CharField(max_length=500)
 
     def __str__(self):

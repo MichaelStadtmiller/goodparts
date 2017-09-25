@@ -9,9 +9,7 @@ def getURLS():
     # next steps:
     # get all urls from http://klipd.com/sitemap.php
     # get actor profile, get all movies
-    #url = "http://klipd.com/random/"
-    #url = 'http://klipd.com/watch/good-morning-vietnam/i-wont-forget-you-scene'
-    url = 'http://klipd.com/watch/the-crying-game/jealous-scene'
+    url = "http://klipd.com/random/"
     scrapeData(url)
 
 
@@ -23,6 +21,13 @@ def scrapeData(url):
                'User-Agent': 'Mozilla/5 (Solaris 10) Gecko'}
     html = requests.get(url, headers=headers)
     soup = BeautifulSoup(html.text, "html.parser")
+
+    #error catch
+    try:
+        if soup.find('div', attrs={'class': 'alert'}).string == "Sorry, clip not found.":
+            return 500
+    except:
+        pass
 
     # header
     head = soup.find('head')
@@ -37,6 +42,8 @@ def scrapeData(url):
     data = soup.find('div', attrs={'class': 'col-sm-4'})
     m_poster = data.find('img').get('src').strip()
     m_date_released = data.find('div', attrs={'class': 'movieReleaseTag'}).string[-10:].strip()
+    if m_date_released == '0000-00-00':
+        m_date_released = None
 
     # initialize
     m_description = ''
@@ -48,19 +55,35 @@ def scrapeData(url):
     descriptions = data.find('div', attrs={'id': 'clip-description'})
     dls = descriptions.find_all('dl')
     for dl in dls:
-        if dl.find('dt').string == "Movie Description":
-            m_description = dl.find('dd').string.strip()
-        elif dl.find('dt').string == "Clip Description":
-            s_description = dl.find('dd').string.strip()
-        elif dl.find('dt').string == "Director":
-            m_director = dl.find('dd').string.strip()
-        elif dl.find('dt').string == "Studios":
-            m_studio = dl.find('dd').string.strip()
+        if dl.find('dt').string == 'Movie Description':
+            try:
+                m_description = dl.find('dd').string.strip()
+            except AttributeError:
+                m_description = ''
+        elif dl.find('dt').string == 'Clip Description':
+            try:
+                s_description = dl.find('dd').string.strip()
+            except AttributeError:
+                s_description = ''
+        elif dl.find('dt').string == 'Director':
+            try:
+                m_director = dl.find('dd').string.strip()
+            except AttributeError:
+                m_director = ''
+        elif dl.find('dt').string == 'Studios':
+            try:
+                m_studio = dl.find('dd').string.strip()
+            except AttributeError:
+                m_studio = ''
 
-    # get video file
-    flex_video = soup.find('div', attrs={'class': 'flex-video'})
-    v = flex_video.find('script').get('data-config').split('/')
-    s_video_path = 'https://cdn.video.playwire.com/' + v[3] + '/videos/' + v[6] + '/video-sd.mp4'
+    try:
+        # get video file
+        flex_video = soup.find('div', attrs={'class': 'flex-video'})
+        v = flex_video.find('script').get('data-config').split('/')
+        s_video_path = 'https://cdn.video.playwire.com/' + v[3] + '/videos/' + v[6] + '/video-sd.mp4'
+    except AttributeError:
+        s_video_path = ''
+
 
     # MOVIE TO DATABASE
     ## Check if exists
@@ -94,18 +117,30 @@ def scrapeData(url):
     actors = actor_list.find_all('a')
     for a in actors:
         # actor names
-        actor_data = a.find('div', attrs={'class': 'castBlock'})
-        title_role = actor_data.get('alt').split(' - ')
-        a_name = title_role[0]
-        r_role = title_role[1]
-        a_headshot = actor_data.get('style').split('(''')[1][:-3][1:]
-        a_name_path = a.get('href')
+        try:
+            actor_data = a.find('div', attrs={'class': 'castBlock'})
+            title_role = actor_data.get('alt').split(' - ')
+            a_name = title_role[0]
+            r_role = title_role[1]
+        except AttributeError:
+            a_name = ''
+            r_role = ''
 
+        try:
+            a_headshot = actor_data.get('style').split('(''')[1][:-3][1:]
+        except AttributeError:
+            a_headshot = ''
+
+        try:
+            a_name_path = a.get('href')
+        except AttributeError:
+            a_name_path = ''
 
         # ACTORS TO DATABASE
         ## Check if exists
         if Actor.objects.filter(name=a_name):
-            print('actor ' + a_name + ' already exists in the database.')
+            pass
+            # print('actor ' + a_name + ' already exists in the database.')
         else:
             # Insert actor if DNE
             new_actor = Actor(name=a_name,
@@ -114,7 +149,8 @@ def scrapeData(url):
             new_actor.save()
 
         if Role.objects.filter(actor__name=a_name).filter(movie__name=m_name):
-            print('role ' + a_name + ' in ' + m_name + ' already exists in the database.')
+            pass
+            # print('role ' + a_name + ' in ' + m_name + ' already exists in the database.')
         else:
             # Insert if DNE
             # error catch in case movie or actor is not added
