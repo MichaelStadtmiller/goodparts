@@ -88,7 +88,8 @@ def scrapeData(url):
     # MOVIE TO DATABASE
     ## Check if exists
     if Movie.objects.filter(name_path=m_name_path):
-        print('movie ' + m_name + ' already exists in the database.')
+        pass
+        #print('movie ' + m_name + ' already exists in the database.')
     else:
         # Insert if DNE
         new_movie = Movie(name=m_name,
@@ -100,9 +101,11 @@ def scrapeData(url):
                           date_released=m_date_released,
                           director=m_director)
         new_movie.save()
+        print('movie ' + m_name + ' Added!')
 
     if Scene.objects.filter(name_path=s_name_path):
-        print('scene ' + s_name + ' already exists in the database.')
+        pass
+        #print('scene ' + s_name + ' already exists in the database.')
     else:
         # Insert if DNE
         new_scene = Scene(movie=Movie.objects.get(name=m_name),
@@ -111,6 +114,8 @@ def scrapeData(url):
                           description=s_description,
                           video_path=s_video_path)
         new_scene.save()
+        print('scene ' + s_name + ' Added!')
+
 
     # get actors
     actor_list = data.find('div', attrs={'class': 'rowMM'})
@@ -147,6 +152,7 @@ def scrapeData(url):
                               name_path=a_name_path,
                               headshot=a_headshot)
             new_actor.save()
+            print('actor ' + a_name + ' Added!')
 
         if Role.objects.filter(actor__name=a_name).filter(movie__name=m_name):
             pass
@@ -160,6 +166,7 @@ def scrapeData(url):
                             actor=thisactor,
                             role=r_role)
             new_role.save()
+            print('role ' + a_name + ' in ' + m_name + ' Added!')
 
 
 
