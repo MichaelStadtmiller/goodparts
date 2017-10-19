@@ -49,7 +49,7 @@ class Scene(models.Model):
         return self.name_path
 
 
-decades = [
+decades = (
     '2016',
     '2015',
     '2014',
@@ -65,10 +65,10 @@ decades = [
     '1950s',
     '1940s',
     '1930s'
-]
+)
 
 
-alphabet = [
+alphabet = (
     '0',
     'a',
     'b',
@@ -96,4 +96,4 @@ alphabet = [
     'x',
     'y',
     'z'
-]
+)
