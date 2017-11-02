@@ -23,11 +23,15 @@ class Movie(models.Model):
 class Actor(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, unique=True)
-    name_path = models.CharField(max_length=500, null=True)
+    url = models.CharField(max_length=500, null=True)
     headshot = models.CharField(max_length=500, null=True)
 
     def __str__(self):
         return self.name
+
+    def name_path(self):
+        path = len(self.url)-self.url.rfind('/')-1
+        return path
 
 
 class Role(models.Model):
