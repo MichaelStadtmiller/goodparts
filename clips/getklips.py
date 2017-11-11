@@ -137,9 +137,9 @@ def scrapeData(url):
             a_headshot = ''
 
         try:
-            a_name_path = a.get('href')
+            a_url = a.get('href')
         except AttributeError:
-            a_name_path = ''
+            a_url = ''
 
         # ACTORS TO DATABASE
         ## Check if exists
@@ -149,7 +149,7 @@ def scrapeData(url):
         else:
             # Insert actor if DNE
             new_actor = Actor(name=a_name,
-                              name_path=a_name_path,
+                              url=a_url,
                               headshot=a_headshot)
             new_actor.save()
             print('actor ' + a_name + ' Added!')

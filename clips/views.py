@@ -18,8 +18,9 @@ def api_get_all_scenes(request):
     # get all scene data with movie data
     if request.method == 'GET':
         scene_array = []
+        # MLS: filter for one movies only right now.
         all_scenes = Scene.objects.filter(movie__name='American Gangster')
-        #all_scenes = Scene.objects.all()
+        # all_scenes = Scene.objects.all()
         for s in all_scenes:
             scene_sub_array = {}
             # scene data
@@ -38,13 +39,12 @@ def api_get_all_scenes(request):
         return HttpResponse(json.dumps(scene_array))
     return HttpResponse(status=403)
 
-
+# Given an actor n
 def api_get_actor_scenes(request):
     # get all scene data with movie data
     if request.method == 'GET':
         actor_input = request.GET.get('actor')
         print(actor_input)
-
 
         all_actor_scenes = Scene.objects.filter(movie__role__actor__url='http://klipd.com/people/1769ngel-salazar')
         #all_actor_scenes = Scene.objects.filter(movie__role__actor__name_path=actor_input)
