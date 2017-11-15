@@ -100,8 +100,11 @@ def scrapeData(url):
                           genres=m_genres,
                           date_released=m_date_released,
                           director=m_director)
-        new_movie.save()
-        print('movie ' + m_name + ' Added!')
+        try:
+            new_movie.save()
+            print('movie ' + m_name + ' Added!')
+        except:
+            print('MOVIE ' + m_name_path + ' NOT ADDED!!')
 
     if Scene.objects.filter(name_path=s_name_path):
         pass
@@ -113,9 +116,11 @@ def scrapeData(url):
                           name_path=s_name_path,
                           description=s_description,
                           video_path=s_video_path)
-        new_scene.save()
-        print('scene ' + s_name + ' Added!')
-
+        try:
+            new_scene.save()
+            print('scene ' + s_name + ' Added!')
+        except:
+            print('SCENE ' + s_name_path + ' NOT ADDED!!')
 
     # get actors
     actor_list = data.find('div', attrs={'class': 'rowMM'})
@@ -151,8 +156,11 @@ def scrapeData(url):
             new_actor = Actor(name=a_name,
                               url=a_url,
                               headshot=a_headshot)
-            new_actor.save()
-            print('actor ' + a_name + ' Added!')
+            try:
+                new_actor.save()
+                print('actor ' + a_name + ' Added!')
+            except:
+                print('ACTOR ' + a_name + ' NOT ADDED!!')
 
         if Role.objects.filter(actor__name=a_name).filter(movie__name=m_name):
             pass
@@ -165,8 +173,11 @@ def scrapeData(url):
             new_role = Role(movie=thismovie,
                             actor=thisactor,
                             role=r_role)
-            new_role.save()
-            print('role ' + a_name + ' in ' + m_name + ' Added!')
+            try:
+                new_role.save()
+                print('role ' + a_name + ' in ' + m_name + ' Added!')
+            except:
+                print('ROLE ' + a_name + ' NOT ADDED!!')
 
 
 

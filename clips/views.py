@@ -5,12 +5,13 @@ import json
 
 
 def scrape(request):
-    for a in range(200):
+    for a in range(2000):
         getURLS()
     return HttpResponse(status=200)
 
 
 def index(request):
+    
     return render(request, 'clips/index.html')
 
 
