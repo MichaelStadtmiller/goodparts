@@ -11,7 +11,7 @@ def scrape(request):
 
 
 def index(request):
-    
+
     return render(request, 'clips/index.html')
 
 
