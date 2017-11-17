@@ -44,6 +44,7 @@ def api_get_all_scenes(request):
         return HttpResponse(json.dumps(scene_array))
     return HttpResponse(status=403)
 
+
 # Given an actor n
 def api_get_actor_scenes(request):
     # get all scene data with movie data
