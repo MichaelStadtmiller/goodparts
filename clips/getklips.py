@@ -7,7 +7,7 @@ import os.path
 
 def getURLS():
     # next steps:
-    # get all urls from http://klipd.com/sitemap.php
+    # get all urls from http://klipd.com/sitemap.php (add /watch/ before scene name)
     # get actor profile, get all movies
     url = "http://klipd.com/random/"
     scrapeData(url)

@@ -11,8 +11,12 @@ def scrape(request):
 
 
 def index(request):
-
-    return render(request, 'clips/index.html')
+    movie_count = Movie.objects.count()
+    actor_count = Actor.objects.count()
+    scene_count = Scene.objects.count()
+    return render(request, 'clips/index.html', {'movie_count': movie_count,
+                                                'actor_count': actor_count,
+                                                'scene_count': scene_count})
 
 
 def api_get_all_scenes(request):
