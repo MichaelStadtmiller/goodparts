@@ -23,6 +23,18 @@ def index(request):
 ###
 # Return a json list of all movie scenes
 ###
+def api_get_some_scenes(request):
+    if request.method == 'GET':
+        # MLS: filter for one movies only right now.
+        some_scenes = Scene.objects.filter(movie__name='American Gangster')
+
+        return HttpResponse(get_scene_data(some_scenes))
+    return HttpResponse(status=403)
+
+
+###
+# Return a json list of all movie scenes
+###
 def api_get_all_scenes(request):
     if request.method == 'GET':
         # MLS: filter for one movies only right now.
