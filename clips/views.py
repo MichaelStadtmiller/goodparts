@@ -28,7 +28,8 @@ def api_get_some_scenes(request):
         # MLS: filter for one movies only right now.
         some_scenes = Scene.objects.filter(movie__name='American Gangster')
 
-        return HttpResponse(get_scene_data(some_scenes))
+        #return HttpResponse(get_scene_data(some_scenes))
+        return JsonResponse(json.loads(get_scene_data(some_scenes)), safe=False)
     return HttpResponse(status=403)
 
 
@@ -37,8 +38,6 @@ def api_get_some_scenes(request):
 ###
 def api_get_all_scenes(request):
     if request.method == 'GET':
-        # MLS: filter for one movies only right now.
-        #all_scenes = Scene.objects.filter(movie__name='American Gangster')
         all_scenes = Scene.objects.all()
 
         return HttpResponse(get_scene_data(all_scenes))
