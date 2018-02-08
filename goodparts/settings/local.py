@@ -7,7 +7,7 @@ try:
     DB_USER = 'goodparts'
     DB_PASSWD = 'goodparts'
     DB_HOST = 'localhost'
-    DB_PORT = ''
+    DB_PORT = '5432'
     ALLOWED_HOSTS = ['*']
     BASE_URL = 'http://127.0.0.1:8000'
     DEBUG = True
