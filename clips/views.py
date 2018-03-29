@@ -1,84 +1,77 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+from django.views import View
 
 from .getklips import *
 import json
 
 
-def scrape(request):
-    for a in range(2000):
-        getURLS()
-    return HttpResponse(status=200)
+class scrape(View):
+    def get(self, request):
+        for a in range(2000):
+            getURLS()
+        return HttpResponse(status=200)
 
 
-def index(request):
-    movie_count = Movie.objects.count()
-    actor_count = Actor.objects.count()
-    scene_count = Scene.objects.count()
-    return render(request, 'clips/index.html', {'movie_count': movie_count,
-                                                'actor_count': actor_count,
-                                                'scene_count': scene_count})
+class index(View):
+    def get(self, request):
+        movie_count = Movie.objects.count()
+        actor_count = Actor.objects.count()
+        scene_count = Scene.objects.count()
+        return render(request, 'clips/index.html',
+                      {'movie_count': movie_count, 'actor_count': actor_count, 'scene_count': scene_count})
 
 
 ###
 # Return a json list of all movie scenes
 ###
-def api_get_some_scenes(request):
-    if request.method == 'GET':
+class api_get_some_scenes(View):
+    def get(self, request):
         # MLS: filter for one movies only right now.
         some_scenes = Scene.objects.filter(movie__name='American Gangster')
-
-        #return HttpResponse(get_scene_data(some_scenes))
         return JsonResponse(json.loads(get_scene_data(some_scenes)), safe=False)
-    return HttpResponse(status=403)
 
 
 ###
 # Return a json list of all movie scenes
 ###
-def api_get_all_scenes(request):
-    if request.method == 'GET':
+class api_get_all_scenes(View):
+    def get(self, request):
         all_scenes = Scene.objects.all()
-
         return HttpResponse(get_scene_data(all_scenes))
-    return HttpResponse(status=403)
 
 
 ###
 # Given an actor id from request
 # Return a json list of scenes for that actor
 ###
-def api_get_actor_scenes(request):
-    if request.method == 'GET':
+class api_get_actor_scenes(View):
+    def get(self, request):
         actor_input = request.GET.get('actor')
         all_actor_scenes = Scene.objects.filter(movie__role__actor__id=actor_input)
         return HttpResponse(get_scene_data(all_actor_scenes), content_type="application/json")
-    return HttpResponse(status=403)
 
 
 ###
 # Given a decade in request
 # Return a json list of scenes for that year
 ###
-def api_get_decade_scenes(request):
-    if request.method == 'GET':
+class api_get_decade_scenes(View):
+    def get(self, request):
         decade_input = request.GET.get('decade')[:3]
         all_decade_scenes = Scene.objects.filter(movie__date_released__startswith=decade_input)
-
         return HttpResponse(get_scene_data(all_decade_scenes), content_type="application/json")
-    return HttpResponse(status=403)
 
 
 ###
 # Given a movie id from request
 # Return a json list of scenes for that movie
 ###
-def api_get_movie_scenes(request):
-    if request.method == 'GET':
+class api_get_movie_scenes(View):
+    def get(self, request):
         movie_input = request.GET.get('movie')
         all_movie_scenes = Scene.objects.filter(movie__id=movie_input)
         return HttpResponse(get_scene_data(all_movie_scenes), content_type="application/json")
-    return HttpResponse(status=403)
 
 
 ###
